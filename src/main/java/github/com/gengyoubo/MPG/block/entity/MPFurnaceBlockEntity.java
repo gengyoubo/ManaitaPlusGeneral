@@ -29,8 +29,8 @@ import github.com.gengyoubo.MPG.menu.MPGFurnaceMenu;
 import javax.annotation.Nullable;
 public class MPFurnaceBlockEntity extends AbstractFurnaceBlockEntity {
     private static final int[] SLOTS_FOR_UP = new int[]{0};
-    private static final int[] SLOTS_FOR_DOWN = new int[]{2, 1};
-    private static final int[] SLOTS_FOR_SIDES = new int[]{1};
+    private static final int[] SLOTS_FOR_DOWN = new int[]{2};
+    private static final int[] SLOTS_FOR_SIDES = new int[]{0};
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
     private final RecipeManager.CachedCheck<Container, ? extends AbstractCookingRecipe> quickCheck;
 
@@ -134,6 +134,10 @@ public class MPFurnaceBlockEntity extends AbstractFurnaceBlockEntity {
         return this.canPlaceItem(p_58336_, p_58337_);
     }
 
+    public boolean canTakeItemThroughFace(int p_58377_, @NotNull ItemStack p_58378_, @NotNull Direction p_58379_) {
+        return p_58377_ == 2;
+    }
+
     public void setItem(int p_58333_, ItemStack p_58334_) {
         ItemStack itemstack = this.items.get(p_58333_);
         boolean flag = !p_58334_.isEmpty() && ItemStack.isSameItemSameTags(itemstack, p_58334_);
@@ -150,7 +154,7 @@ public class MPFurnaceBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     public boolean canPlaceItem(int p_58389_, @NotNull ItemStack p_58390_) {
-        return p_58389_ != 2;
+        return p_58389_ == 0;
     }
 
     public void setRecipeUsed(@Nullable Recipe<?> p_58345_) {

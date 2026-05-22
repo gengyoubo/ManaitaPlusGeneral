@@ -16,11 +16,10 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import static github.com.gengyoubo.MPG.MPGConfig.source_doubling_value;
-
 public final class MPGStorageCellEnhancement {
     private static final String ENTITY_FUSION_TICKS = "mpgAe2StorageCellFusionTicks";
     private static final int REQUIRED_TICKS = 100;
+    private static final int MAX_CELL_TYPES = Short.MAX_VALUE;
 
     private MPGStorageCellEnhancement() {
     }
@@ -67,16 +66,33 @@ public final class MPGStorageCellEnhancement {
     }
 
     public static int getEnhancedBytes(ItemStack stack, int baseBytes) {
+        return (int) Math.min(Integer.MAX_VALUE, getEnhancedBytesLong(stack, baseBytes));
+    }
+
+    public static long getEnhancedBytesLong(ItemStack stack, long fallbackBaseBytes) {
         int level = MPGStorageCellEnhancementData.getLevel(stack);
-        int perLevel = Math.max(1, source_doubling_value);
-        long bytes = baseBytes;
+        int perLevel = MPGStorageCellEnhancementData.getMultiplierPerLevel();
+        long bytes = MPGStorageCellEnhancementData.getBaseBytes(stack, (int) Math.min(Integer.MAX_VALUE, Math.max(1L, fallbackBaseBytes)));
         for (int i = 0; i < level; i++) {
-            if (bytes >= Integer.MAX_VALUE / perLevel) {
-                return Integer.MAX_VALUE;
+            if (bytes >= Long.MAX_VALUE / perLevel) {
+                return Long.MAX_VALUE;
             }
             bytes *= perLevel;
         }
-        return (int) Math.min(Integer.MAX_VALUE, bytes);
+        return Math.max(1L, bytes);
+    }
+
+    public static int getEnhancedTypes(ItemStack stack, int baseTypes) {
+        int level = MPGStorageCellEnhancementData.getLevel(stack);
+        int perLevel = MPGStorageCellEnhancementData.getMultiplierPerLevel();
+        long types = MPGStorageCellEnhancementData.getBaseTypes(stack, baseTypes);
+        for (int i = 0; i < level; i++) {
+            if (types >= (long) MAX_CELL_TYPES / perLevel) {
+                return MAX_CELL_TYPES;
+            }
+            types *= perLevel;
+        }
+        return (int) Math.max(1L, Math.min(MAX_CELL_TYPES, types));
     }
 
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {
@@ -100,6 +116,13 @@ public final class MPGStorageCellEnhancement {
         ItemStack original = cellEntity.getItem();
         ItemStack enhanced = original.copy();
         enhanced.setCount(1);
+        if (enhanced.getItem() instanceof IBasicCellItem cellItem) {
+            MPGStorageCellEnhancementData.initializeBaseStats(
+                    enhanced,
+                    cellItem.getBytes(enhanced),
+                    cellItem.getTotalTypes(enhanced)
+            );
+        }
         MPGStorageCellEnhancementData.increaseLevel(enhanced);
 
         if (original.getCount() == 1) {
@@ -133,8 +156,7 @@ public final class MPGStorageCellEnhancement {
         if (!isEnhanceableCell(stack)) {
             return false;
         }
-        int currentBytes = ((IBasicCellItem) stack.getItem()).getBytes(stack);
-        return currentBytes < Integer.MAX_VALUE;
+        return MPGStorageCellEnhancement.getEnhancedBytesLong(stack, 1) < Long.MAX_VALUE;
     }
 
     private static boolean isEnhanceableCell(ItemStack stack) {

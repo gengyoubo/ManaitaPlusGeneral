@@ -174,7 +174,7 @@ public class MPGFurnacePortable extends MPGPortableItem {
         }
 
         public boolean canPlaceItem(int p_58389_, @NotNull ItemStack p_58390_) {
-            return p_58389_ != 2;
+            return p_58389_ == 0;
         }
 
         public void clearContent() {

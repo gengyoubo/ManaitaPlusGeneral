@@ -1,0 +1,101 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "github.com.gengyoubo",
+    "module": "ManaitaPlusGeneral",
+    "version": "2.3.2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.4"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
+          "url": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
+          "size": 525374,
+          "sha512": "00cefd17891cb9d0be3c1ea31198089b369a068b08d87e5d3ec76c567a02892888afeb153f1d53d7d16aeeb239ee42dc6ae2f2dc079f155a0c7604391f0de46c",
+          "sha256": "07bedf98f4c3d09fc68aa0f6f6430cb69d0432c0440e142f5570ea9ee00cba1d",
+          "sha1": "020dc7fd80b397138b9576f1466e455e8a4b82a0",
+          "md5": "8daf3f3e514b53a913226df42637ff23"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "curse.maven",
+          "module": "applied-energistics-2-223794",
+          "version": {
+            "strictly": "7148487_mapped_official_1.20.1",
+            "requires": "7148487_mapped_official_1.20.1"
+          }
+        },
+        {
+          "group": "curse.maven",
+          "module": "guideme-1173950",
+          "version": {
+            "strictly": "7127447_mapped_official_1.20.1",
+            "requires": "7127447_mapped_official_1.20.1"
+          }
+        },
+        {
+          "group": "net.minecraftforge",
+          "module": "forge",
+          "version": {
+            "requires": "1.20.1-47.2.19_mapped_official_1.20.1_at_c4c149b86af210a1f2546a973658ab5d4ce1f727"
+          }
+        },
+        {
+          "group": "mezz.jei",
+          "module": "jei-1.20.1-forge",
+          "version": {
+            "strictly": "15.20.0.130_mapped_official_1.20.1",
+            "requires": "15.20.0.130_mapped_official_1.20.1"
+          }
+        },
+        {
+          "group": "top.theillusivec4.curios",
+          "module": "curios-forge",
+          "version": {
+            "strictly": "5.14.1+1.20.1_mapped_official_1.20.1",
+            "requires": "5.14.1+1.20.1_mapped_official_1.20.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
+          "url": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
+          "size": 525374,
+          "sha512": "00cefd17891cb9d0be3c1ea31198089b369a068b08d87e5d3ec76c567a02892888afeb153f1d53d7d16aeeb239ee42dc6ae2f2dc079f155a0c7604391f0de46c",
+          "sha256": "07bedf98f4c3d09fc68aa0f6f6430cb69d0432c0440e142f5570ea9ee00cba1d",
+          "sha1": "020dc7fd80b397138b9576f1466e455e8a4b82a0",
+          "md5": "8daf3f3e514b53a913226df42637ff23"
+        }
+      ]
+    }
+  ]
+}

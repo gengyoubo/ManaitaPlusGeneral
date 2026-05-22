@@ -12,13 +12,13 @@
 ],
   "key": {
     "X": {
-      "item": "appliedenergistics2:material"
+      "item": "ae2:crafting_card"
     },
     "Y": {
       "item": "manaita_plus_general:manaita_source"
     },
     "Z": {
-      "item": "appliedenergistics2:crafting_pattern"
+      "item": "ae2:blank_pattern"
     }
   },
   "result": {

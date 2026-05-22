@@ -7,6 +7,8 @@ import net.minecraft.world.item.ItemStack;
 
 public final class MPGStorageCellEnhancementData {
     public static final String TAG_LEVEL = "mpgAe2StorageCellEnhancement";
+    private static final String TAG_BASE_BYTES = "mpgAe2StorageCellBaseBytes";
+    private static final String TAG_BASE_TYPES = "mpgAe2StorageCellBaseTypes";
 
     private MPGStorageCellEnhancementData() {
     }
@@ -19,6 +21,32 @@ public final class MPGStorageCellEnhancementData {
     public static void increaseLevel(ItemStack stack) {
         int level = getLevel(stack);
         stack.getOrCreateTag().putInt(TAG_LEVEL, level + 1);
+    }
+
+    public static void initializeBaseStats(ItemStack stack, int baseBytes, int baseTypes) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.contains(TAG_BASE_BYTES)) {
+            tag.putInt(TAG_BASE_BYTES, Math.max(1, baseBytes));
+        }
+        if (!tag.contains(TAG_BASE_TYPES)) {
+            tag.putInt(TAG_BASE_TYPES, Math.max(1, baseTypes));
+        }
+    }
+
+    public static int getBaseBytes(ItemStack stack, int fallback) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null && tag.contains(TAG_BASE_BYTES)) {
+            return Math.max(1, tag.getInt(TAG_BASE_BYTES));
+        }
+        return Math.max(1, fallback);
+    }
+
+    public static int getBaseTypes(ItemStack stack, int fallback) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null && tag.contains(TAG_BASE_TYPES)) {
+            return Math.max(1, tag.getInt(TAG_BASE_TYPES));
+        }
+        return Math.max(1, fallback);
     }
 
     public static Component applyNamePrefix(ItemStack stack, Component originalName) {
@@ -39,6 +67,10 @@ public final class MPGStorageCellEnhancementData {
             multiplier *= perLevel;
         }
         return "x" + multiplier;
+    }
+
+    public static int getMultiplierPerLevel() {
+        return Math.max(1, MPGConfig.source_doubling_value);
     }
 
     private static String createNamePrefix(int level) {

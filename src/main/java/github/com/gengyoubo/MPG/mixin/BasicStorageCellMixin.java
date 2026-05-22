@@ -15,4 +15,9 @@ public class BasicStorageCellMixin {
     private void mpg$enhanceBytes(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue(MPGStorageCellEnhancement.getEnhancedBytes(stack, cir.getReturnValue()));
     }
+
+    @Inject(method = "getTotalTypes", at = @At("RETURN"), cancellable = true)
+    private void mpg$enhanceTypes(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(MPGStorageCellEnhancement.getEnhancedTypes(stack, cir.getReturnValue()));
+    }
 }
