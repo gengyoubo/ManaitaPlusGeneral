@@ -11,6 +11,7 @@ import github.com.gengyoubo.MPG.item.ring.MPGBrewingRing;
 import github.com.gengyoubo.MPG.item.ring.MPGCraftingRing;
 import github.com.gengyoubo.MPG.item.ring.MPGFurnaceRing;
 import github.com.gengyoubo.MPG.item.tool.*;
+import net.minecraftforge.fml.ModList;
 
 import static github.com.gengyoubo.MPG.MPG.ITEMS;
 
@@ -30,6 +31,7 @@ public class MPGItemCore {
     public static final RegistryObject<Item> ManaitaLeggings = ITEMS.register("manaita_leggings", MPGArmor.Leggings::new);
     public static final RegistryObject<Item> ManaitaBoots = ITEMS.register("manaita_boots", MPGArmor.Boots::new);
     public static final RegistryObject<Item> ManaitaSource = ITEMS.register("manaita_source", MPGSourceItem::new);
+    public static RegistryObject<Item> EnhancedCraftingPattern;
     public static final RegistryObject<Item> ManaitaCraftingPortable = ITEMS.register("manaita_crafting_portable", MPGCraftingPortable::new);
     public static final RegistryObject<Item> ManaitaFurnacePortable = ITEMS.register("manaita_furnace_portable", MPGFurnacePortable::new);
     public static final RegistryObject<Item> ManaitaBrewingPortable = ITEMS.register("manaita_brewing_portable", MPGBrewingPortable::new);
@@ -38,6 +40,9 @@ public class MPGItemCore {
     public static final RegistryObject<Item> ManaitaBrewingRing = ITEMS.register("manaita_brewing_ring", MPGBrewingRing::new);
 
     public static void init() {
+        if (ModList.get().isLoaded("ae2") && EnhancedCraftingPattern == null) {
+            EnhancedCraftingPattern = MPGAE2CompatCore.registerEnhancedCraftingPattern();
+        }
     }
 
 }

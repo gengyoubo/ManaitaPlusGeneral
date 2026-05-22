@@ -73,15 +73,25 @@ repositories {
         name = "Curios"
         url = uri("https://maven.theillusivec4.top/")
     }
+    maven {
+        url "https://cursemaven.com"
+    }
+    mavenCentral()
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    //JEI
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+    //饰品栏模组
     compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}:api"))
     runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}"))
+    //AE2
+    implementation fg.deobf("curse.maven:applied-energistics-2-223794:7148487")
+    implementation fg.deobf("curse.maven:guideme-1173950:7127447")
+    //Mixin
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

@@ -44,7 +44,7 @@ public class MPGConfig
             .comment("DestroyDoubling")
             .defineInRange("destroy_doubling_value", 4, 1, Integer.MAX_VALUE);
 
-    private static final ForgeConfigSpec.IntValue source_doubling = BUILDER
+    public static final ForgeConfigSpec.IntValue source_doubling = BUILDER
             .comment("SourceDoubling")
             .defineInRange("source_doubling_value", 64, 1, Integer.MAX_VALUE);
 

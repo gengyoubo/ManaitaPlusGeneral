@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],"pattern": [
+  "YXY",
+  "XZX",
+  "YXY"
+],
+  "key": {
+    "X": {
+      "item": "appliedenergistics2:material"
+    },
+    "Y": {
+      "item": "manaita_plus_general:manaita_source"
+    },
+    "Z": {
+      "item": "appliedenergistics2:crafting_pattern"
+    }
+  },
+  "result": {
+    "item": "manaita_plus_general:enhanced_crafting_pattern"
+  }
+}

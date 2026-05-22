@@ -86,6 +86,9 @@ public class MPG {
                 output.accept(MPGItemCore.ManaitaBoots.get());
                 output.accept(MPGItemCore.ManaitaHook.get());
                 output.accept(MPGItemCore.ManaitaSource.get());
+                if (ModList.get().isLoaded("ae2") && MPGItemCore.EnhancedCraftingPattern != null) {
+                    output.accept(MPGItemCore.EnhancedCraftingPattern.get());
+                }
             }).build());
 
     public MPG() {

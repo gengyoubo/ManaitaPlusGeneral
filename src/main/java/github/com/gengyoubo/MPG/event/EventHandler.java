@@ -1,7 +1,9 @@
 package github.com.gengyoubo.MPG.event;
 
 import github.com.gengyoubo.MPG.MPG;
+import github.com.gengyoubo.MPG.ae2.MPGStorageCellEnhancement;
 import github.com.gengyoubo.MPG.item.data.IMPGKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,8 +25,10 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.ItemHandlerHelper;
 import github.com.gengyoubo.MPG.MPGConfig;
@@ -45,6 +49,9 @@ public class EventHandler {
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
+        if (ModList.get().isLoaded("ae2")) {
+            MPGStorageCellEnhancement.addTooltip(stack, event.getToolTip());
+        }
 
         if (!(stack.getItem() instanceof IMPGKey)) {
             return;
@@ -66,6 +73,16 @@ public class EventHandler {
             }
 
             return;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLevelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase != TickEvent.Phase.END || !ModList.get().isLoaded("ae2")) {
+            return;
+        }
+        if (event.level instanceof ServerLevel serverLevel) {
+            MPGStorageCellEnhancement.tick(serverLevel);
         }
     }
 
