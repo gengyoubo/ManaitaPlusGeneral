@@ -27,11 +27,11 @@
         {
           "name": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
           "url": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
-          "size": 525374,
-          "sha512": "00cefd17891cb9d0be3c1ea31198089b369a068b08d87e5d3ec76c567a02892888afeb153f1d53d7d16aeeb239ee42dc6ae2f2dc079f155a0c7604391f0de46c",
-          "sha256": "07bedf98f4c3d09fc68aa0f6f6430cb69d0432c0440e142f5570ea9ee00cba1d",
-          "sha1": "020dc7fd80b397138b9576f1466e455e8a4b82a0",
-          "md5": "8daf3f3e514b53a913226df42637ff23"
+          "size": 540467,
+          "sha512": "a422b7ad49f84a903ee25525dc49e5a39ee2e14859bc1347b13c05fd691dd22d7926c8f6c6baa8b1c929fece63c22ba9d94932d2856f3392b8c37fb07f1c3b4f",
+          "sha256": "de9cddba0ebfc0ad8c1c7b338016d00d313b88be5d2d68abc459fb0330f6b8c1",
+          "sha1": "09d3d0e6ffbaaaa9822f58406c454e78cb3d1441",
+          "md5": "b4ff4eb7436bfaa4eaad1315073c4604"
         }
       ]
     },
@@ -89,11 +89,11 @@
         {
           "name": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
           "url": "ManaitaPlusGeneral-2.3.2-1.20.1-forge.jar",
-          "size": 525374,
-          "sha512": "00cefd17891cb9d0be3c1ea31198089b369a068b08d87e5d3ec76c567a02892888afeb153f1d53d7d16aeeb239ee42dc6ae2f2dc079f155a0c7604391f0de46c",
-          "sha256": "07bedf98f4c3d09fc68aa0f6f6430cb69d0432c0440e142f5570ea9ee00cba1d",
-          "sha1": "020dc7fd80b397138b9576f1466e455e8a4b82a0",
-          "md5": "8daf3f3e514b53a913226df42637ff23"
+          "size": 540467,
+          "sha512": "a422b7ad49f84a903ee25525dc49e5a39ee2e14859bc1347b13c05fd691dd22d7926c8f6c6baa8b1c929fece63c22ba9d94932d2856f3392b8c37fb07f1c3b4f",
+          "sha256": "de9cddba0ebfc0ad8c1c7b338016d00d313b88be5d2d68abc459fb0330f6b8c1",
+          "sha1": "09d3d0e6ffbaaaa9822f58406c454e78cb3d1441",
+          "md5": "b4ff4eb7436bfaa4eaad1315073c4604"
         }
       ]
     }

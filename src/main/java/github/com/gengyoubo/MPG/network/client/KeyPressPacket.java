@@ -64,7 +64,7 @@ public class KeyPressPacket {
         ItemStack mainHandStack = player.getMainHandItem();
 
         if (mainHandStack.getItem() instanceof IMPGKey keyItem) {
-            keyItem.onManaitaKeyPress(mainHandStack);
+            keyItem.onManaitaKeyPress(mainHandStack, player);
         }
     }
 

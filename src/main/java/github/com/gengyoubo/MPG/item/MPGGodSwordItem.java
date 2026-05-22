@@ -199,6 +199,15 @@ public class MPGGodSwordItem extends SwordItem implements IMPGKey, IMPGDoubling 
     }
 
     @Override
+    public void onManaitaKeyPress(ItemStack itemStack, Player player) {
+        if (player.isShiftKeyDown()) {
+            setRemove(itemStack, !isRemove(itemStack));
+        } else {
+            toggleDoubling(itemStack);
+        }
+    }
+
+    @Override
     public void onManaitaKeyPressOnClient(ItemStack itemStack, Player player) {
         if (player.isShiftKeyDown()) {
             boolean remove = !isRemove(itemStack);
