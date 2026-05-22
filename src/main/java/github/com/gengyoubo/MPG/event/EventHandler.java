@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -96,6 +97,13 @@ public class EventHandler {
         }
 
         return contents.getKey().startsWith("item.modifiers.");
+    }
+
+    @SubscribeEvent
+    public static void onItemToss(ItemTossEvent event) {
+        if (MPUtils.isProtectedFromForcedRemoval(event.getPlayer())) {
+            event.getEntity().getPersistentData().putBoolean(MPUtils.PROTECTED_ITEM_ENTITY_TAG, true);
+        }
     }
 
     @SubscribeEvent

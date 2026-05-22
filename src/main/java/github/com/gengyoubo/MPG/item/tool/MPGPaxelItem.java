@@ -21,6 +21,7 @@ import github.com.gengyoubo.MPG.item.tool.base.ManaitaPlusLegacyToolActionHelper
 import github.com.gengyoubo.MPG.item.tool.base.ManaitaPlusLegacyToolBase;
 import github.com.gengyoubo.MPG.util.MPGEntityData;
 import github.com.gengyoubo.MPG.util.MPText;
+import github.com.gengyoubo.MPG.util.MPUtils;
 
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class MPGPaxelItem extends ManaitaPlusLegacyToolBase {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        if (MPUtils.isProtectedFromForcedRemoval(entity)) {
+            return true;
+        }
         MPGEntityData.death.add(entity);
         entity.hurt(entity.damageSources().playerAttack(player), 10000);
         if (entity instanceof LivingEntity living) {

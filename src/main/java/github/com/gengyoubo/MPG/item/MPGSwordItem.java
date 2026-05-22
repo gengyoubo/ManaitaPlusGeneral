@@ -59,6 +59,9 @@ public class MPGSwordItem extends SwordItem implements IMPGKey, IMPGDoubling {
                 AABB aabb = player.getBoundingBox().expandTowards(3.0D, 3.0D, 3.0D).move(vec3.x * i1, vec3.y * i1, vec3.z * i1);
                 for (Entity entity1 : player.level().getEntities(player, aabb, (p_20434_) -> true)) {
                     if (entity1 instanceof LivingEntity living) {
+                        if (MPUtils.isProtectedFromForcedRemoval(living)) {
+                            continue;
+                        }
                         if (!player.level().isClientSide) {
                             living.hurt(living.damageSources().playerAttack(player), Float.MAX_VALUE);
                             living.setHealth(Float.NaN);
@@ -108,6 +111,9 @@ public class MPGSwordItem extends SwordItem implements IMPGKey, IMPGDoubling {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        if (MPUtils.isProtectedFromForcedRemoval(entity)) {
+            return true;
+        }
         entity.hurt(entity.damageSources().playerAttack(player), 10000);
         return super.onLeftClickEntity(stack, player, entity);
     }

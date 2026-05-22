@@ -14,6 +14,7 @@ import net.minecraftforge.entity.PartEntity;
 import org.jetbrains.annotations.NotNull;
 import github.com.gengyoubo.MPG.core.MPGEntityCore;
 import github.com.gengyoubo.MPG.util.MPGEntityData;
+import github.com.gengyoubo.MPG.util.MPUtils;
 
 public class MPGEntityArrow extends AbstractArrow {
     public MPGEntityArrow(EntityType<? extends AbstractArrow> p_36721_, Level p_36722_) {
@@ -41,6 +42,7 @@ public class MPGEntityArrow extends AbstractArrow {
             while (entity instanceof PartEntity<?> part) entity = part.getParent();
 
             if (entity == null) return;
+            if (MPUtils.isProtectedFromForcedRemoval(entity)) return;
             Entity owner = this.getOwner();
             if (owner instanceof Player living) {
                 DamageSource source = entity.damageSources().playerAttack(living);

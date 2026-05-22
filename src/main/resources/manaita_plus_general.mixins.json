@@ -7,7 +7,15 @@
   "mixins": [
     "BasicCellInventoryMixin",
     "BasicStorageCellMixin",
+    "EntityDataAccessorMixin",
+    "EntityMixin",
+    "GiveCommandMixin",
+    "InventoryMixin",
+    "ItemEntityMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
+    "LootCommandMixin",
+    "PlayerMixin",
     "PortableCellItemMixin"
   ],
   "client": [

@@ -1,9 +1,12 @@
 package github.com.gengyoubo.MPG.util;
 
+import github.com.gengyoubo.MPG.MPG;
 import github.com.gengyoubo.MPG.item.armor.MPGArmor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +15,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.DragonFireball;
@@ -37,6 +41,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class MPUtils {
+    public static final String PROTECTED_ITEM_ENTITY_TAG = "ManaitaPlusGeneralProtectedItem";
+
     public static Entity getEntity(Entity entity) {
         if (entity instanceof Arrow arrow)
             return arrow.getOwner();
@@ -56,6 +62,8 @@ public class MPUtils {
             wrapper.addIterable(server.getAllEntities());
             wrapper.addIterable(server.getPartEntities());
             Entity[] entities = wrapper.getEntities();
+            Entity nearestTarget = null;
+            double nearestDistanceSqr = Double.MAX_VALUE;
             for (int i = 0; i < wrapper.size(); i++) {
                 Entity entity = entities[i];
                 Entity target = getEntity(entity);
@@ -63,7 +71,12 @@ public class MPUtils {
                     tntities.add(target);
                     continue;
                 }
-                if (!shiftKeyDown && target.getType().getCategory() != MobCategory.MONSTER) continue;
+                if (!isGodSwordTarget(player, target, shiftKeyDown)) continue;
+                double distanceSqr = player.distanceToSqr(target);
+                if (distanceSqr < nearestDistanceSqr) {
+                    nearestTarget = target;
+                    nearestDistanceSqr = distanceSqr;
+                }
                 attack(target, player,remove);
             }
             server.getPartEntities().clear();
@@ -79,10 +92,40 @@ public class MPUtils {
                     xp.playerTouch(player);
                 }
             }
+            attackNearestGodSwordTarget(player, nearestTarget, remove);
+        }
+    }
+
+    private static boolean isGodSwordTarget(Player player, Entity target, boolean shiftKeyDown) {
+        if (target == player || target instanceof ItemEntity || target instanceof ExperienceOrb || isProtectedFromForcedRemoval(target)) {
+            return false;
+        }
+        return shiftKeyDown || target.getType().getCategory() == MobCategory.MONSTER;
+    }
+
+    private static void attackNearestGodSwordTarget(Player player, Entity target, boolean remove) {
+        if (target == null || !target.isAlive() || isProtectedFromForcedRemoval(target)) {
+            return;
+        }
+
+        if (remove) {
+            removeOnServer(target);
+            return;
+        }
+
+        if (target instanceof LivingEntity living) {
+            living.hurt(living.damageSources().genericKill(), Float.MAX_VALUE);
+            if (living.isAlive()) {
+                living.die(living.damageSources().genericKill());
+            }
         }
     }
 
     public static void attack(Entity target, Player player, boolean remove) {
+        if (isProtectedFromForcedRemoval(target)) {
+            return;
+        }
+
         if (remove) {
             MPGEntityData.remove.add(target);
             if (player.isShiftKeyDown() && !target.getClass().getName().startsWith("net.minecraft")) {
@@ -98,16 +141,21 @@ public class MPUtils {
         } else {
             if (target instanceof LivingEntity living) {
                 living.hurt(living.damageSources().playerAttack(player), Float.MAX_VALUE);
+                if (living.isAlive()) {
+                    living.hurt(living.damageSources().genericKill(), Float.MAX_VALUE);
+                }
 
-                living.handleEntityEvent((byte) 2);
-                living.handleEntityEvent((byte) 47);
-                living.handleEntityEvent((byte) 48);
-                living.handleEntityEvent((byte) 49);
-                living.handleEntityEvent((byte) 50);
-                living.handleEntityEvent((byte) 51);
-                living.handleEntityEvent((byte) 52);
+                if (living.isAlive()) {
+                    living.handleEntityEvent((byte) 2);
+                    living.handleEntityEvent((byte) 47);
+                    living.handleEntityEvent((byte) 48);
+                    living.handleEntityEvent((byte) 49);
+                    living.handleEntityEvent((byte) 50);
+                    living.handleEntityEvent((byte) 51);
+                    living.handleEntityEvent((byte) 52);
 
-                living.die(living.damageSources().generic());
+                    living.die(living.damageSources().genericKill());
+                }
             }
         }
     }
@@ -115,6 +163,10 @@ public class MPUtils {
 
 
     public static void removeOnServer(Entity target) {
+        if (isProtectedFromForcedRemoval(target)) {
+            return;
+        }
+
         if (target.level() instanceof ServerLevel serverLevel) {
             Int2ObjectMap<Entity> byId = serverLevel.entityManager.visibleEntityStorage.byId;
             byId.remove(target.getId());
@@ -165,6 +217,45 @@ public class MPUtils {
 
     public static boolean isManaita(Player player) {
         return MPGEntityData.manaita.accept(player);
+    }
+
+    public static boolean isProtectedFromForcedRemoval(Entity entity) {
+        if (entity instanceof Player player) {
+            return isManaitaArmor(player) || isManaita(player);
+        }
+
+        if (entity instanceof ItemEntity itemEntity) {
+            return isProtectedItemEntity(itemEntity);
+        }
+
+        return false;
+    }
+
+    public static boolean isProtectedItemEntity(ItemEntity itemEntity) {
+        ItemStack stack = itemEntity.getItem();
+        return !stack.isEmpty()
+                && (isManaitaItem(stack) || itemEntity.getPersistentData().getBoolean(PROTECTED_ITEM_ENTITY_TAG));
+    }
+
+    public static boolean isManaitaItem(ItemStack stack) {
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return id != null && MPG.MODID.equals(id.getNamespace());
+    }
+
+    public static boolean addToEmptyInventorySlot(Inventory inventory, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+
+        int slot = inventory.getFreeSlot();
+        if (slot < 0) {
+            stack.setCount(0);
+            return false;
+        }
+
+        inventory.setItem(slot, stack.copyAndClear());
+        inventory.getItem(slot).setPopTime(5);
+        return true;
     }
 
 
