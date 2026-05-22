@@ -1,6 +1,8 @@
 package github.com.gengyoubo.MPG.ae2;
 
 import github.com.gengyoubo.MPG.MPG;
+import github.com.gengyoubo.MPG.util.MPGNBTData;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -36,7 +38,7 @@ public final class MPGEnhancedCraftingPatternData {
 
         ListTag inputList = new ListTag();
         for (int slot = 0; slot < Math.min(inputs.length, CRAFTING_GRID_SIZE); slot++) {
-            ItemStack input = inputs[slot];
+            ItemStack input = normalizeStack(inputs[slot]);
             if (input == null || input.isEmpty()) {
                 continue;
             }
@@ -46,7 +48,7 @@ public final class MPGEnhancedCraftingPatternData {
             inputList.add(entry);
         }
         tag.put(TAG_INPUTS, inputList);
-        tag.put(TAG_OUTPUT, output.save(new CompoundTag()));
+        tag.put(TAG_OUTPUT, normalizeStack(output).save(new CompoundTag()));
     }
 
     public static ResourceLocation readRecipeId(CompoundTag tag) {
@@ -61,7 +63,7 @@ public final class MPGEnhancedCraftingPatternData {
             CompoundTag entry = inputList.getCompound(i);
             int slot = entry.getByte(TAG_INPUT_SLOT) & 255;
             if (slot >= 0 && slot < CRAFTING_GRID_SIZE) {
-                inputs[slot] = ItemStack.of(entry.getCompound(TAG_INPUT_STACK));
+                inputs[slot] = normalizeStack(ItemStack.of(entry.getCompound(TAG_INPUT_STACK)));
             }
         }
         for (int i = 0; i < inputs.length; i++) {
@@ -73,6 +75,37 @@ public final class MPGEnhancedCraftingPatternData {
     }
 
     public static ItemStack readOutput(CompoundTag tag) {
-        return ItemStack.of(tag.getCompound(TAG_OUTPUT));
+        return normalizeStack(ItemStack.of(tag.getCompound(TAG_OUTPUT)));
+    }
+
+    public static ItemStack normalizeStack(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack normalized = stack.copy();
+        if (isTypedManaitaStack(normalized) && !normalized.getOrCreateTag().contains(MPGNBTData.ItemType)) {
+            normalized.getOrCreateTag().putInt(MPGNBTData.ItemType, 0);
+        }
+        return normalized;
+    }
+
+    private static boolean isTypedManaitaStack(ItemStack stack) {
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        if (!MPG.MODID.equals(itemId.getNamespace())) {
+            return false;
+        }
+        return switch (itemId.getPath()) {
+            case "block_crafting_manaita",
+                    "block_furnace_manaita",
+                    "block_brewing_manaita",
+                    "block_hook_manaita",
+                    "manaita_crafting_portable",
+                    "manaita_furnace_portable",
+                    "manaita_brewing_portable",
+                    "manaita_crafting_ring",
+                    "manaita_furnace_ring",
+                    "manaita_brewing_ring" -> true;
+            default -> false;
+        };
     }
 }

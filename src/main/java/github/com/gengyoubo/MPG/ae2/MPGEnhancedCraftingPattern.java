@@ -35,6 +35,7 @@ public class MPGEnhancedCraftingPattern implements IMolecularAssemblerSupportedP
     private final GenericStack[] outputs;
     private final IInput[] inputs;
     private final int[] sparseToCompressed = new int[MPGEnhancedCraftingPatternData.CRAFTING_GRID_SIZE];
+    private final boolean[] templateOnlyInputs = new boolean[MPGEnhancedCraftingPatternData.CRAFTING_GRID_SIZE];
     private final AEKey[] remainingKeys;
     private final CraftingRecipe recipe;
 
@@ -80,7 +81,12 @@ public class MPGEnhancedCraftingPattern implements IMolecularAssemblerSupportedP
             }
             ItemStack remainder = slot < remainders.size() ? remainders.get(slot) : ItemStack.EMPTY;
             if (!remainder.isEmpty()) {
-                remainingKeys[slot] = AEItemKey.of(remainder);
+                AEItemKey remainingKey = AEItemKey.of(remainder);
+                if (input.what().equals(remainingKey) && outputsContain(remainingKey)) {
+                    templateOnlyInputs[slot] = true;
+                    continue;
+                }
+                remainingKeys[slot] = remainingKey;
             }
             sparseToCompressed[slot] = inputCount++;
         }
@@ -153,6 +159,11 @@ public class MPGEnhancedCraftingPattern implements IMolecularAssemblerSupportedP
             }
             long amount = input.amount();
             accessor.set(slot, toCraftingGridStack(input));
+            if (templateOnlyInputs[slot]) {
+                MPG.LOGGER.info("[MPG AE2 DEBUG] slot {} set template-only input={} amount={}",
+                        slot, input.what(), amount);
+                continue;
+            }
             if (compressed < 0 || compressed >= availableInputs.length) {
                 MPG.LOGGER.info("[MPG AE2 DEBUG] slot {} set input={} amount={} but compressedIndex={} is out of range",
                         slot, input.what(), amount, compressed);
@@ -174,6 +185,11 @@ public class MPGEnhancedCraftingPattern implements IMolecularAssemblerSupportedP
         }
 
         NonNullList<ItemStack> remainingItems = recipe.getRemainingItems(craftingContainer);
+        for (int slot = 0; slot < Math.min(templateOnlyInputs.length, remainingItems.size()); slot++) {
+            if (templateOnlyInputs[slot]) {
+                remainingItems.set(slot, ItemStack.EMPTY);
+            }
+        }
         MPG.LOGGER.info("[MPG AE2 DEBUG] getRemainingItems recipe={} grid={} remaining={}",
                 recipeId, describeContainer(craftingContainer), describeGrid(remainingItems.toArray(new ItemStack[0])));
         return remainingItems;
@@ -207,6 +223,15 @@ public class MPGEnhancedCraftingPattern implements IMolecularAssemblerSupportedP
             return Optional.of(craftingRecipe);
         }
         return Optional.empty();
+    }
+
+    private boolean outputsContain(AEKey key) {
+        for (GenericStack output : outputs) {
+            if (output != null && output.what().equals(key)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static String describeContainer(Container container) {
