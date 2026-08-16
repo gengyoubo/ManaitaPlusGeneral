@@ -1,3 +1,7 @@
+## Regarding Source Code Prior to Version 3.0
+This is the source code repository for versions prior to 3.0. If you'd like to view the source code repository for version 3.0 and later, please follow this link:
+https://github.com/gengyoubo/NewManaitaPlusGeneral
+
 # ManaitaPlusGeneral
 
 Manaita Plus is based on a mod called Manaita that once existed on the Minecraft Unofficial Japan Users Forum. the forum itself has been permanently closed due to hacking. However, please remember to respect them. For reference, I've attached an archive of the links where Manaita was once distributed.
